@@ -22,7 +22,7 @@ export default function Footer() {
         </a>{" "}
         and{" "}
         <a
-          href="netlify.app"
+          href="https://weather-app-reactss.netlify.app/"
           target="_blank"
           rel="noreferrer"
         >
