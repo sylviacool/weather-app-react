@@ -23,8 +23,8 @@ export default function Main({
           </p>
         </div>
         <div className="d-flex align-items-center">
-          <div>{icon}</div>
-          <div className="fw-bold fs-1 ms-3">{temperature}°</div>
+          <div className="weather-icon">{icon}</div>
+          <div className="temperature-display ms-3">{temperature}°</div>
         </div>
       </div>
       <div className="weather-forecast mt-4">{forecast}</div>

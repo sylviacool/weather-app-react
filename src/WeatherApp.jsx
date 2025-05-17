@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Footer from "./components/Footer";
+import "./weather-styles.css";
 
 export default function WeatherApp() {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
+  
+  // Load default weather data when component mounts
+  useEffect(() => {
+    // Default city
+    searchCity("London");
+  }, []);
 
   function searchCity(cityName) {
     const apiKey = "36dbadda4844et80d39a8b26da0ofdb7";
@@ -15,6 +22,24 @@ export default function WeatherApp() {
 
     axios.get(apiUrl).then((response) => {
       const current = response.data;
+      
+      // Determine weather condition class
+      let weatherClass = "weather-clear";
+      const description = current.condition.description.toLowerCase();
+      if (description.includes("cloud")) {
+        weatherClass = "weather-clouds";
+      } else if (description.includes("rain") || description.includes("shower")) {
+        weatherClass = "weather-rain";
+      } else if (description.includes("snow")) {
+        weatherClass = "weather-snow";
+      }
+      
+      // Check if it's night time
+      const currentHour = new Date(current.time * 1000).getHours();
+      if (currentHour >= 18 || currentHour <= 6) {
+        weatherClass = "weather-night";
+      }
+      
       setWeatherData((prev) => ({
         ...prev,
         temperature: Math.round(current.temperature.current),
@@ -22,10 +47,12 @@ export default function WeatherApp() {
         wind: Math.round(current.wind.speed),
         description: current.condition.description,
         date: new Date(current.time * 1000).toLocaleString(),
+        weatherClass: weatherClass,
         icon: (
           <img
             src={current.condition.icon_url}
             alt={current.condition.description}
+            className="weather-icon"
           />
         ),
         city: current.city,
@@ -39,12 +66,13 @@ export default function WeatherApp() {
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
 
         return (
-          <div key={index} className="col-2 text-center">
+          <div key={index} className="col-2 text-center forecast-item p-2">
             <div className="fw-bold">{weekday}</div>
             <img
               src={day.condition.icon_url}
               alt={day.condition.description}
               width="50"
+              className="my-2"
             />
             <div>
               <span className="fw-bold">
@@ -71,7 +99,7 @@ export default function WeatherApp() {
   }
 
   return (
-    <div className="weather-app container bg-white p-4 mt-5 rounded shadow">
+    <div className={`weather-app container p-4 mt-5 rounded shadow ${weatherData ? weatherData.weatherClass : 'weather-clear'}`}>
       <Header city={city} setCity={setCity} handleSubmit={handleSubmit} />
       {weatherData && (
         <Main
