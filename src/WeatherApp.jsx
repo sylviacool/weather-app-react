@@ -25,19 +25,28 @@ export default function WeatherApp() {
       
       // Determine weather condition class
       let weatherClass = "weather-clear";
+      let iconEffectClass = "sun-effect";
       const description = current.condition.description.toLowerCase();
+      
       if (description.includes("cloud")) {
         weatherClass = "weather-clouds";
-      } else if (description.includes("rain") || description.includes("shower")) {
+        iconEffectClass = "cloud-effect";
+      } else if (description.includes("rain") || description.includes("shower") || description.includes("drizzle")) {
         weatherClass = "weather-rain";
-      } else if (description.includes("snow")) {
+        iconEffectClass = "rain-effect";
+      } else if (description.includes("snow") || description.includes("sleet") || description.includes("hail")) {
         weatherClass = "weather-snow";
+        iconEffectClass = "snow-effect";
       }
       
       // Check if it's night time
       const currentHour = new Date(current.time * 1000).getHours();
       if (currentHour >= 18 || currentHour <= 6) {
         weatherClass = "weather-night";
+        // Keep the precipitation effect if it's raining or snowing at night
+        if (!iconEffectClass.includes("rain") && !iconEffectClass.includes("snow")) {
+          iconEffectClass = ""; // No special effect for clear night
+        }
       }
       
       setWeatherData((prev) => ({
@@ -49,11 +58,12 @@ export default function WeatherApp() {
         date: new Date(current.time * 1000).toLocaleString(),
         weatherClass: weatherClass,
         icon: (
-          <img
-            src={current.condition.icon_url}
-            alt={current.condition.description}
-            className="weather-icon"
-          />
+          <div className={`weather-icon ${iconEffectClass}`}>
+            <img
+              src={current.condition.icon_url}
+              alt={current.condition.description}
+            />
+          </div>
         ),
         city: current.city,
       }));
@@ -64,21 +74,35 @@ export default function WeatherApp() {
       const forecastElements = forecastDays.map((day, index) => {
         const date = new Date(day.time * 1000);
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+        
+        // Determine icon effect class for forecast
+        let iconEffectClass = "sun-effect";
+        const description = day.condition.description.toLowerCase();
+        
+        if (description.includes("cloud")) {
+          iconEffectClass = "cloud-effect";
+        } else if (description.includes("rain") || description.includes("shower") || description.includes("drizzle")) {
+          iconEffectClass = "rain-effect";
+        } else if (description.includes("snow") || description.includes("sleet") || description.includes("hail")) {
+          iconEffectClass = "snow-effect";
+        }
 
         return (
           <div key={index} className="col-2 text-center forecast-item p-2">
             <div className="fw-bold">{weekday}</div>
-            <img
-              src={day.condition.icon_url}
-              alt={day.condition.description}
-              width="50"
-              className="my-2"
-            />
+            <div className={`weather-icon ${iconEffectClass}`}>
+              <img
+                src={day.condition.icon_url}
+                alt={day.condition.description}
+                width="50"
+                className="my-2"
+              />
+            </div>
             <div>
               <span className="fw-bold">
-                {Math.round(day.temperature.maximum)}°
+                {Math.round(day.temperature.maximum)}°C
               </span>{" "}
-              / {Math.round(day.temperature.minimum)}°
+              / {Math.round(day.temperature.minimum)}°C
             </div>
           </div>
         );

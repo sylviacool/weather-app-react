@@ -24,12 +24,82 @@ body {
   transition: all 0.3s ease;
 }
 
-.weather-icon img {
+.weather-icon {
+  position: relative;
+  display: inline-block;
   transition: all 0.3s ease;
 }
 
-.weather-icon img:hover {
+.weather-icon img {
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.weather-icon:hover img {
   transform: scale(1.1);
+}
+
+/* Rain effect for the icon */
+.weather-icon.rain-effect::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 150%;
+  top: 70%;
+  left: 0;
+  background: linear-gradient(to bottom, transparent, transparent 80%, rgba(30, 144, 255, 0.6) 80%, transparent 100%);
+  background-size: 0.3rem 1rem;
+  animation: rain 1s infinite linear;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Snow effect for the icon */
+.weather-icon.snow-effect::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 150%;
+  top: 70%;
+  left: 0;
+  background-image: 
+    radial-gradient(circle at 50% 50%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 25% 25%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 75% 75%, white 0.1rem, transparent 0.1rem);
+  background-size: 0.5rem 0.5rem;
+  animation: snow 8s infinite linear;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Sun rays effect for the icon */
+.weather-icon.sun-effect::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  top: -25%;
+  left: -25%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.3), transparent 70%);
+  animation: sunshine 4s infinite linear;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Cloud movement effect for the icon */
+.weather-icon.cloud-effect::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  top: 0;
+  left: -50%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,50 Q25,30 50,50 Q75,70 100,50" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/></svg>');
+  background-size: 50% 100%;
+  animation: clouds 10s infinite linear;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .forecast-item {
@@ -58,21 +128,146 @@ body {
 /* Weather condition specific backgrounds */
 .weather-clear {
   background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-clear::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 40%);
+  animation: sunshine 8s infinite linear;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .weather-clouds {
   background: linear-gradient(to bottom, #B0C4DE, #E0E0E0);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-clouds::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"><path d="M0,200 Q150,100 300,200 Q450,300 600,200 Q750,100 900,200 Q1050,300 1200,200 L1200,0 L0,0 Z" fill="rgba(255,255,255,0.3)"/></svg>');
+  background-size: 50% 100%;
+  animation: clouds 60s infinite linear;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .weather-rain {
   background: linear-gradient(to bottom, #708090, #B0C4DE);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-rain::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -100%;
+  left: 0;
+  background: linear-gradient(to bottom, transparent, transparent 80%, rgba(255, 255, 255, 0.5) 80%, transparent 100%);
+  background-size: 0.5rem 1rem;
+  animation: rain 1s infinite linear;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .weather-snow {
   background: linear-gradient(to bottom, #E0E0E0, #FFFFFF);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-snow::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -100%;
+  left: 0;
+  background-image: 
+    radial-gradient(circle at 50% 50%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 25% 25%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 75% 75%, white 0.1rem, transparent 0.1rem);
+  background-size: 1rem 1rem;
+  animation: snow 10s infinite linear;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .weather-night {
-  background: linear-gradient(to bottom, #191970, #483D8B);
+  background: linear-gradient(to bottom, #393981, #554c92);
   color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-night::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 75% 75%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 50% 50%, white 0.15rem, transparent 0.15rem),
+    radial-gradient(circle at 10% 90%, white 0.1rem, transparent 0.1rem),
+    radial-gradient(circle at 90% 10%, white 0.1rem, transparent 0.1rem);
+  background-size: 20% 20%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Weather animations */
+@keyframes sunshine {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes clouds {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rain {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes snow {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(200%) translateX(2rem);
+  }
 }
